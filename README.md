@@ -1,50 +1,58 @@
-# Welcome to your Expo app 👋
+# Expo Location iOS Background Permission Bug
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This repo demonstrates a bug in expo-location package where the first background location permission request on iOS returns "denied" immediately without showing the permission dialog.
 
-## Get started
+## The Issue
 
-1. Install dependencies
+When requesting background location permission on iOS:
 
-   ```bash
-   npm install
-   ```
+1. First attempt returns "Denied" instantly (without waiting for the permission dialog to close).
+2. Second attempt works correctly
 
-2. Start the app
+This only happens:
 
-   ```bash
-    npx expo start
-   ```
+- On iOS
+- On Expo SDK 52
+- On the first background permission request after app install
 
-In the output, you'll find options to open the app in a
+## Steps to Reproduce
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+1. Clone and install
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+git clone https://github.com/sabuhiteymurov/expo-location-repro
+cd expo-location-repro
+yarn
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Build and run on iOS
 
-## Learn more
+```
+yarn expo prebuild
+expo run:ios
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+3. Test the bug:
+   - Tap "Request Foreground Permission" - works without issues
+   - Tap "Request Background Permission" - returns "denied" instantly without waiting for user response
+   - Tap "Request Background Permission" again - now returns the previous user permission.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+The app shows the permission results at the bottom of the screen and logs them to the console.
 
-## Join the community
+## Environment
 
-Join our community of developers creating universal apps.
+- Expo SDK: 52
+- expo-location: 18.0.6
+- iOS: 18.3
+- New Architecture: Enabled
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Expected Behavior
+
+- First background permission request result should wait for user's response
+- Status should only update after user interaction with the permission dialog
+
+## Actual Behavior
+
+- First request returns "denied" immediately without waiting for user response
+- Second request works correctly
+- When we tap "Request Background Permission" without first selecting "Request Foreground Permission," the issue occurs if we choose "Allow Once." However, I found that it doesn’t happen if we select "Allow While Using App" from the dialog in this scenario.
