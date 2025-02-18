@@ -33,8 +33,8 @@ expo run:ios
 ```
 
 3. Test the bug:
-   - Tap "Request Foreground Permission" - works without issues
-   - Tap "Request Background Permission" - returns "denied" instantly without waiting for user response
+   - First tap "Request Foreground Permission" - works without issues
+   - Then tap "Request Background Permission" - returns "denied" instantly without waiting for user response
    - Tap "Request Background Permission" again - now returns the previous user permission.
 
 The app shows the permission results at the bottom of the screen and logs them to the console.
