@@ -1,6 +1,6 @@
 # Expo Location iOS Background Permission Bug
 
-This repo demonstrates a bug in expo-location package where the first background location permission request on iOS returns "denied" immediately without showing the permission dialog.
+This repo demonstrates a bug in expo-location package where the first background location permission request on iOS returns "denied" immediately without waiting for user response.
 
 ## The Issue
 
