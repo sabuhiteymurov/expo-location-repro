@@ -13,7 +13,7 @@ This only happens:
 
 - On iOS
 - On Expo SDK 52
-- On the first background permission request after app install
+- On the first always-in-use permission request after requesting when-in-use permission
 
 ## Steps to Reproduce
 
